@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self Stirring Coffee Mug – Buy Now</title>
+
+<style>
+body {
+  margin: 0;
+  background: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #111827;
+}
+header {
+  background: #000;
+  color: #fff;
+  padding: 14px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+.wrap {
+  max-width: 420px;
+  margin: auto;
+  padding: 14px;
+}
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.1);
+}
+
+/* 🔥 SQUARE CAROUSEL FIX */
+.carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* PERFECT SQUARE */
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f3f4f6;
+}
+.slides {
+  display: flex;
+  height: 100%;
+  transition: transform .3s ease;
+}
+.slides img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* CROP, NO STRETCH */
+  flex-shrink: 0;
+}
+.dots {
+  text-align: center;
+  margin-top: 6px;
+}
+.dot {
+  height: 8px;
+  width: 8px;
+  margin: 0 3px;
+  background: #d1d5db;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot.active {
+  background: #111;
+}
+
+/* CONTENT */
+h1 {
+  font-size: 20px;
+  margin: 12px 0 6px;
+}
+.sub {
+  font-size: 14px;
+  color: #374151;
+}
+.price-row {
+  margin: 12px 0;
+}
+.price {
+  font-size: 24px;
+  font-weight: 800;
+  color: #16a34a;
+}
+.mrp {
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+.off {
+  background: #dc2626;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  margin-left: 6px;
+}
+.badge {
+  background: #ecfdf5;
+  color: #065f46;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-top: 10px;
+}
+ul {
+  padding-left: 18px;
+  font-size: 14px;
+}
+li {
+  margin-bottom: 6px;
+}
+.reviews {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 14px 0;
+  font-size: 13px;
+}
+button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+}
+.trust {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 8px;
+}
+.sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 10px;
+}
+.sticky button {
+  max-width: 420px;
+  margin: auto;
+  display: block;
+}
+footer {
+  height: 80px;
+}
+</style>
+</head>
+
+<body>
+
+<header>🔥 LIMITED OFFER • FREE DELIVERY</header>
+
+<div class="wrap">
+<div class="card">
+
+<!-- ✅ SQUARE IMAGE CAROUSEL -->
+<div class="carousel">
+  <div class="slides" id="slides">
+    <img src="https://images.meesho.com/images/products/599295697/8tkey_512.avif?width=512">
+    <img src="https://images.meesho.com/images/products/599295697/tnplm_512.avif?width=512">
+    <img src="https://images.meesho.com/images/products/599295697/exuty_512.avif?width=512">
+    <img src="https://images.meesho.com/images/products/599295697/o25vo_512.avif?width=512">
+  </div>
+</div>
+<div class="dots" id="dots"></div>
+
+<div class="badge">⭐ 4.8/5 Rated by 1,200+ Buyers</div>
+
+<h1>Self Stirring Coffee Mug – Electric High-Speed Mixing Cup (400ml)</h1>
+
+<p class="sub">
+Perfectly mixed coffee, milk or protein — no spoon needed.
+</p>
+
+<div class="price-row">
+  <span class="price">₹999</span>
+  <span class="mrp">₹1,599</span>
+  <span class="off">38% OFF</span>
+</div>
+
+<ul>
+  <li>⚡ One-button automatic stirring</li>
+  <li>☕ Coffee, milk & protein shakes</li>
+  <li>🧪 Borosilicate glass body</li>
+  <li>🧼 Easy clean • Spill-proof lid</li>
+</ul>
+
+<div class="reviews">
+⭐⭐⭐⭐⭐ Rohit – “Mixing is perfect”<br>
+⭐⭐⭐⭐⭐ Anjali – “Premium look”<br>
+⭐⭐⭐⭐⭐ Sameer – “Very useful”
+</div>
+
+<button onclick="buyNow()">BUY NOW</button>
+
+<p class="trust">🔒 Secure Prepaid Checkout • WhatsApp Support</p>
+
+</div>
+</div>
+
+<footer></footer>
+
+<div class="sticky">
+  <button onclick="buyNow()">BUY NOW – ₹999</button>
+</div>
+
+<script>
+function buyNow() {
+  const product =
+    "Self Stirring Coffee Mug - Electric High Speed Mixing Cup (400ml)";
+  const price = 999;
+  location.href =
+    `checkout.html?product=${encodeURIComponent(product)}&price=${price}`;
+}
+
+/* CAROUSEL FIXED */
+const slides = document.getElementById("slides");
+const dots = document.getElementById("dots");
+const total = slides.children.length;
+let index = 0;
+let interval;
+
+/* Create dots */
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement("span");
+  dot.className = "dot" + (i === 0 ? " active" : "");
+  dots.appendChild(dot);
+}
+
+function updateCarousel() {
+  slides.style.transform = `translateX(-${index * 100}%)`;
+  document.querySelectorAll(".dot").forEach((d, i) =>
+    d.classList.toggle("active", i === index)
+  );
+}
+
+/* AUTO PLAY */
+function startAutoPlay() {
+  interval = setInterval(() => {
+    index = (index + 1) % total;
+    updateCarousel();
+  }, 2000);
+}
+
+/* STOP & RESTART */
+function resetAutoPlay() {
+  clearInterval(interval);
+  startAutoPlay();
+}
+
+/* SWIPE SUPPORT */
+let startX = 0;
+
+slides.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+  clearInterval(interval);
+});
+
+slides.addEventListener("touchend", e => {
+  const diff = e.changedTouches[0].clientX - startX;
+
+  if (diff < -50 && index < total - 1) index++;
+  if (diff > 50 && index > 0) index--;
+
+  updateCarousel();
+  resetAutoPlay();
+});
+
+/* START */
+updateCarousel();
+startAutoPlay();
+</script>
+
+
+</body>
+</html>
