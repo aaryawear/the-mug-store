@@ -56,34 +56,29 @@ button {
   font-weight: 700;
   font-size: 16px;
 }
-button:disabled { opacity: .6; }
-.status {
-  text-align: center;
-  font-size: 14px;
-  margin-top: 10px;
-}
+button:disabled { opacity:.6 }
+.status { text-align:center; margin-top:10px }
 .loader {
-  margin: 12px auto;
-  border: 4px solid #e5e7eb;
-  border-top: 4px solid #000;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  animation: spin 1s linear infinite;
+  margin:12px auto;
+  border:4px solid #e5e7eb;
+  border-top:4px solid #000;
+  border-radius:50%;
+  width:36px;height:36px;
+  animation:spin 1s linear infinite
 }
 @keyframes spin {100%{transform:rotate(360deg)}}
 footer {
-  text-align: center;
-  font-size: 12px;
-  color: #6b7280;
-  padding: 16px;
+  text-align:center;
+  font-size:12px;
+  color:#6b7280;
+  padding:16px
 }
 </style>
 </head>
 
 <body>
 
-<header>🔒 Secure Checkout • Prepaid Only</header>
+<header>🔒 Secure Checkout • UPI / Cash on Delivery</header>
 
 <div class="wrap">
 <div class="card">
@@ -103,6 +98,12 @@ footer {
 <input id="state" placeholder="State *">
 <input id="pincode" placeholder="Pincode *">
 
+<!-- PAYMENT METHOD -->
+<div style="margin:12px 0">
+  <label><input type="radio" name="payment" value="UPI" checked> Pay Online (UPI)</label><br>
+  <label><input type="radio" name="payment" value="COD"> Cash on Delivery</label>
+</div>
+
 <button id="payBtn">Pay ₹<span id="payAmount"></span></button>
 
 <div id="status" class="status"></div>
@@ -113,18 +114,17 @@ footer {
 
 <footer>WhatsApp support after order</footer>
 
-<!-- ================= CONFIG (CHANGE PER STORE) ================= -->
+<!-- CONFIG -->
 <script>
 const STORE_NAME = "Kunal Store";
-const UPI_ID = "7381749483@okbizaxis";       // change per store
+const UPI_ID = "7381749483@okbizaxis";
 const TELEGRAM_BOT = "8519147037:AAGXDo9ku4iOP6X6F2jQxnME08WwctUjoj0";
 const TELEGRAM_CHAT = "5820261983";
 </script>
 
-<!-- ================= FIREBASE ================= -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <script>
 firebase.initializeApp({
   apiKey: "AIzaSyAcokjcwR2WEiis__c61TuXEzYXhxUlKB8",
@@ -134,7 +134,7 @@ firebase.initializeApp({
 const db = firebase.firestore();
 </script>
 
-<!-- ================= LOGIC ================= -->
+<!-- LOGIC -->
 <script>
 const params = new URLSearchParams(location.search);
 const productName = params.get("product") || "Product";
@@ -150,19 +150,15 @@ const btn = document.getElementById("payBtn");
 const statusEl = document.getElementById("status");
 const loader = document.getElementById("loader");
 
-/* TELEGRAM */
-function sendTelegram(msg) {
-  fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(msg)}`
-  ).catch(()=>{});
+function sendTelegram(msg){
+  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT}/sendMessage?chat_id=${TELEGRAM_CHAT}&text=${encodeURIComponent(msg)}`).catch(()=>{});
 }
 
-/* UPI */
-function upiLink() {
+function upiLink(){
   return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(STORE_NAME)}&am=${amount}&cu=INR&tn=${orderId}`;
 }
 
-btn.onclick = async () => {
+btn.onclick = () => {
 
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
@@ -176,11 +172,13 @@ btn.onclick = async () => {
     return;
   }
 
+  const paymentMethod =
+    document.querySelector('input[name="payment"]:checked').value;
+
   btn.disabled = true;
-  statusEl.innerText = "Processing payment…";
   loader.style.display = "block";
 
-  await db.collection("orders").add({
+  db.collection("orders").add({
     orderId,
     product: productName,
     amount: Number(amount),
@@ -191,7 +189,8 @@ btn.onclick = async () => {
     state,
     pincode,
     store: STORE_NAME,
-    status: "PENDING",
+    paymentMethod,
+    status: paymentMethod==="COD" ? "COD_PENDING":"PENDING",
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
 
@@ -200,16 +199,20 @@ btn.onclick = async () => {
 🆔 ${orderId}
 📦 ${productName}
 💰 ₹${amount}
+💳 ${paymentMethod}
 📞 ${phone}`
   );
 
-  /* OPEN UPI IMMEDIATELY */
+  if(paymentMethod==="COD"){
+    statusEl.innerText="Order placed (Cash on Delivery)…";
+    setTimeout(()=>location.href=`success.html?orderId=${orderId}&cod=1`,3000);
+    return;
+  }
+
+  statusEl.innerText="Opening payment app…";
   location.href = upiLink();
 
-  /* PROCESSING 15s */
-  setTimeout(()=>{
-    location.href = `success.html?orderId=${orderId}`;
-  },15000);
+  setTimeout(()=>location.href=`success.html?orderId=${orderId}`,15000);
 };
 </script>
 
