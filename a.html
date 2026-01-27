@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Admin</title>
+
+<style>
+body{margin:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#000;color:#fff;padding:12px;text-align:center}
+.wrap{max-width:520px;margin:auto;padding:10px}
+.card{background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+h3{margin:0}
+.amount{font-weight:700}
+.small{font-size:12px;color:#6b7280}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+button{border:none;border-radius:10px;padding:8px;font-size:12px}
+.copy{background:#f3f4f6}
+.full{width:100%;background:#111;color:#fff;margin-bottom:6px}
+.process{width:100%;background:#16a34a;color:#fff;margin-bottom:6px}
+.reject{width:100%;background:#dc2626;color:#fff}
+.top{display:flex;gap:6px;margin:10px}
+input{flex:1;padding:8px;border-radius:10px;border:1px solid #d1d5db}
+.stats{padding:8px;text-align:center;font-size:14px}
+</style>
+
+<!-- CONFIG -->
+<script>
+const ADMIN_PASSWORD = "Kunal@2026!";
+const ADMIN_KEY = "kunal2026";
+</script>
+
+</head>
+
+<body style="display:none" id="adminBody">
+
+<header>Admin Panel</header>
+
+<div class="wrap">
+
+<div class="top">
+<input id="search" placeholder="Search name / phone / order">
+</div>
+
+<div class="stats">
+Total Sales: ₹<b id="total">0</b>
+</div>
+
+<div id="orders"></div>
+
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyAcokjcwR2WEiis__c61TuXEzYXhxUlKB8",
+  authDomain: "shop-template-7d574.firebaseapp.com",
+  projectId: "shop-template-7d574"
+});
+const db=firebase.firestore();
+</script>
+
+<script>
+/* HIDDEN URL + PASSWORD */
+const urlKey=new URLSearchParams(location.search).get("key");
+if(urlKey!==ADMIN_KEY){
+ location.href="index.html";
+}
+const pass=prompt("Admin Password:");
+if(pass!==ADMIN_PASSWORD){
+ location.href="index.html";
+}
+document.getElementById("adminBody").style.display="block";
+
+/* LOAD ORDERS */
+const ordersDiv=document.getElementById("orders");
+const search=document.getElementById("search");
+const totalEl=document.getElementById("total");
+let orders=[];
+
+db.collection("orders").orderBy("createdAt","desc").onSnapshot(s=>{
+ orders=[];
+ s.forEach(d=>orders.push({id:d.id,...d.data()}));
+ render();
+});
+
+search.oninput=render;
+
+function render(){
+ ordersDiv.innerHTML="";
+ let total=0;
+ const q=search.value.toLowerCase();
+
+ orders.forEach(o=>{
+   if(q && !(o.customerName+o.phone+o.orderId).toLowerCase().includes(q)) return;
+   if(o.status==="PAID") total+=o.amount;
+
+   const d=document.createElement("div");
+   d.className="card";
+   d.innerHTML=`
+<h3>${o.orderId}</h3>
+<div class="amount">₹${o.amount} • ${o.paymentMethod}</div>
+<div class="small">${o.customerName}</div>
+
+<div class="grid">
+<button class="copy" onclick="copy('${o.customerName}')">Name</button>
+<button class="copy" onclick="copy('${o.phone}')">Phone</button>
+<button class="copy" onclick="copy('${o.address}')">Addr</button>
+<button class="copy" onclick="copy('${o.city}')">City</button>
+<button class="copy" onclick="copy('${o.state}')">State</button>
+<button class="copy" onclick="copy('${o.pincode}')">Pin</button>
+</div>
+
+<button class="full" onclick="copy('Name:${o.customerName}\\nPhone:${o.phone}\\nAddress:${o.address},${o.city},${o.state}-${o.pincode}')">Copy Full</button>
+
+<button class="process" onclick="process('${o.id}','${o.customerName}','${o.phone}','${o.orderId}')">Process</button>
+<button class="reject" onclick="reject('${o.id}','${o.customerName}','${o.phone}','${o.orderId}')">Reject</button>
+`;
+   ordersDiv.appendChild(d);
+ });
+
+ totalEl.innerText=total;
+}
+
+function copy(t){navigator.clipboard.writeText(t)}
+
+function process(id,name,phone,oid){
+ db.collection("orders").doc(id).update({status:"PAID"});
+ const msg=
+`Hello ${name},
+
+Your order (${oid}) is confirmed ✅
+It will be dispatched shortly.
+
+📦 Return/Refund:
+If any issue, contact us within 48 hours of delivery with photos.
+
+Thank you for shopping with us 🙂`;
+
+ window.open("https://wa.me/91"+phone+"?text="+encodeURIComponent(msg));
+}
+
+function reject(id,name,phone,oid){
+ const r=prompt("Reject reason:");
+ if(!r) return;
+ db.collection("orders").doc(id).update({status:"REJECTED",rejectNote:r});
+ const msg=
+`Hello ${name},
+
+Your order (${oid}) could not be processed.
+
+Reason: ${r}
+
+If payment was made, please share screenshot.
+
+Thank you.`;
+ window.open("https://wa.me/91"+phone+"?text="+encodeURIComponent(msg));
+}
+</script>
+
+</body>
+</html>
